@@ -530,6 +530,11 @@ trigger_changelevel =
 		self.touch = teleport_touch;
 	else
 		self.touch = changelevel_touch;
+		
+	//Move this trigger to the end of the unusually long tunnel on e4m6 - IEEE 01/04/2014
+	if (mapname == "e4m6")
+		self.origin_y = self.origin_y + 1150;
+	//END IEEE 01/04/2014
 
 	InitTrigger ();
 };

@@ -87,6 +87,10 @@ spawn_item =
 	else if (e.classname == "weapon_supernailgun")		weapon_supernailgun ();
 	else if (e.classname == "weapon_supershotgun")		weapon_supershotgun ();
 	else if (e.classname == "item_artifact_invulnerability")item_artifact_invulnerability ();
+	//Add the explode boxes as placeable items - IEEE 01/04/2014
+	else if (e.classname == "misc_explobox")		misc_explobox ();
+	else if (e.classname == "misc_explobox2")		misc_explobox2 ();
+	//END IEEE 01/04/2014
 	self = o;
 };
 
@@ -243,6 +247,33 @@ place_my_items =
 		// Replaces the only nailgun.
 		spawn_item ("weapon_supernailgun", 0, '-384 384 8', 0);
 	}
+	//Add items to the unusally long tunnel - IEEE 01/04/2014
+	else if (mapname == "e4m6")
+	{
+		//Place some explode boxes
+		spawn_item ("misc_explobox", 0, '2240.9 1604.4 96', 0);
+		spawn_item ("misc_explobox2", 0, '2417.6 1798.4 96', 0);
+		
+		//Place some rockets
+		spawn_item ("item_rockets", 0, '2232.0 1413.9 96', 0);
+		spawn_item ("item_rockets", 0, '2232.0 1433.9 96', 0);
+		
+		//Place torches on the left wall
+		spawn_effects_model ('2222.0 1098.4 132.5', EF_DIMLIGHT, "progs/flame.mdl");
+		spawn_effects_model ('2222.0 1298.4 132.5', EF_DIMLIGHT, "progs/flame.mdl");
+		spawn_effects_model ('2222.0 1498.4 132.5', EF_DIMLIGHT, "progs/flame.mdl");
+		spawn_effects_model ('2222.0 1698.4 132.5', EF_DIMLIGHT, "progs/flame.mdl");
+		spawn_effects_model ('2222.0 1898.4 132.5', EF_DIMLIGHT, "progs/flame.mdl");
+		
+		//Place torches on the right wall
+		spawn_effects_model ('2450.0 1098.4 132.5', EF_DIMLIGHT, "progs/flame.mdl");
+		spawn_effects_model ('2450.0 1298.4 132.5', EF_DIMLIGHT, "progs/flame.mdl");
+		spawn_effects_model ('2450.0 1498.4 132.5', EF_DIMLIGHT, "progs/flame.mdl");
+		spawn_effects_model ('2450.0 1698.4 132.5', EF_DIMLIGHT, "progs/flame.mdl");
+		spawn_effects_model ('2450.0 1898.4 132.5', EF_DIMLIGHT, "progs/flame.mdl");
+				
+	}
+	//END IEEE 01/04/2014
 	else if (mapname == "dm1")
 	{
 		// Replaces yellow armor.
