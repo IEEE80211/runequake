@@ -1354,6 +1354,10 @@ ImpulseCommands =
 			if (!self.aqflags & AQ_QUIET)
 				centerprint (self, "No rune");
 		}
+		//If attempting to drop the bomb rune, attempt to disable it first - IEEE 01/04/2014
+		else if (self.runetype == RN_BOMB)
+			Bomb_Arm (7);//7 is for disarming
+		//END IEEE 01/04/2014
 		else if (self.runetype == RN_RECALL && self.runevar)
 			recall_point_erase ();
 		else if (self.runetype == RN_PACK_RAT && self.runevar)

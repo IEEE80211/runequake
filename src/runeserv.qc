@@ -64,7 +64,7 @@ Rune_Button =
 	if 	(self.runetype == RN_REGEN)		Regen_Activate ();
 	else if (self.runetype == RN_FLY)		Rune_Fly_Activate ();
 	else if (self.runetype == RN_RECALL)		Rune_Recall ();
-	else if (self.runetype == RN_BOMB)		Bomb_Arm ();
+	else if (self.runetype == RN_BOMB)		Bomb_Arm (3);//3 is for arming
 	else if (self.runetype == RN_DSPOTS)		Rune_DSpots ();
 	else if (self.runetype == RN_HOLO)		Rune_Holo ();
 	else if (self.runetype == RN_BLINK)		Rune_Blink (0);

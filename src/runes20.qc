@@ -30,38 +30,95 @@ Bomb_Think =
 	self.nextthink = time + sys_ticrate;
 };
 
+//This could be moved to func.qc, but where is func.qc? -IEEE 01/04/2014
+void () Rune_Bomb_Explode;
+//END IEEE 01/04/2014
+
+//Function to handle the exploding part - IEEE 01/04/2014
 void ()
-Rune_Bomb =
+Rune_Bomb_Explode =
 {
-	if (self.runevar == -1 || self.runetime > time)
-		return;
-
-	if (self.runevar > 0)
-	{
-		sprint (self, "\{133}");
-		sprint_float (self, self.runevar);
-		sprint (self, "\{133} ");
-
-		self.runetime = time + 0.5;
-		self.runevar = self.runevar - 1;
-		sound (self, CHAN_BODY, "buttons/switch04.wav", 1, ATTN_NORM);
-		return;
-	}
-
-	self.runevar = -2;
 	create_te_explosion (self.origin, 0);
 	sprint (self, "\n");
 
 	sure_kill ("kamiself");
 	T_RadiusDamage (RADIUS_NORMAL, self, self, 10000, self, "kamikaze");
 };
+//END IEEE 01/04/2014
 
+//Modified to allow a countdown and possible explosion while removing the rune - IEEE 01/04/2014
 void ()
+Rune_Bomb =
+{
+	if (self.runevar < 0 || self.runetime > time)
+		return;
+
+	//Used to reduce code and properly countdown
+	local float countdown;
+		
+	//If disarming(removing rune) display this
+	if (self.runevar == 7)//7 is for disarming
+		sprint (self, "Attempting to disarm bomb...");
+	
+	//DISARMING - Since the bomb ticks three times when runevar reaches four trigger the disarm code
+	if (self.runevar == 4)
+		{
+		//There is a 1 out of 10 chance that the disarming process fails and the bomb explodes
+		if (random () < 0.2)
+			{
+			sprint (self, "oops!\n");
+			Rune_Bomb_Explode ();
+			self.runevar = -2;
+			return;
+			}
+		else
+			{
+			sprint (self, "DISARMED!\n");
+			centerprint (self, "Rune Removed");
+			self.runetype = 0;//Remove the rune
+			return;
+			}
+		}
+	
+	//EXPLODING - the player initiated a normal explode, so runevar reached 0
+	if (self.runevar == 0)
+		{
+		Rune_Bomb_Explode ();
+		return;
+		}
+
+	if (self.runevar > 0)
+	{
+		//Adjust for using a runevar value of 7 to disarm
+		if (self.runevar > 3)
+			countdown = self.runevar - 4;
+		else
+			countdown = self.runevar;
+			
+		sprint (self, "\{133}");
+		sprint_float (self, countdown);
+		sprint (self, "\{133} ");
+
+		self.runetime = time + 0.5;
+		self.runevar = self.runevar - 1;
+		sound (self, CHAN_BODY, "buttons/switch04.wav", 1, ATTN_NORM);
+		return;
+	}	
+};
+//END IEEE 01/04/2014
+
+//Using type to control if the player is trying to use the rune or remove it - IEEE 01/04/2014
+
+//NOTE: you will also need to add "float type" in func.qc (but I do not see it in this source):
+//		void (float type) Bomb_Arm;
+
+void (float type)
 Bomb_Arm =
 {
 	if (self.runevar == -1)
-		self.runevar = 3;
+		self.runevar = type;//3 for arm and 7 for disarm
 };
+//END IEEE 01/04/2014
 
 void ()
 Bomb_Spawn =
