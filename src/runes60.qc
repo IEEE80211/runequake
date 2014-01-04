@@ -696,6 +696,37 @@ Rune_AntiPack =
 
 	sound (self, CHAN_WEAPON, "demon/dhit2.wav", 1, ATTN_NORM);
 	centerprint (self, "Anti-pack dropped!");
+	
+	//Randomly add a dead body to fool players - IEEE 01/03/2014
+	if (random () * 4 >= 3)
+	{
+		local entity body;
+		
+		body = spawn ();
+		body.solid = SOLID_TRIGGER;
+		body.movetype	= MOVETYPE_TOSS;
+		body.classname	= "antipack body";
+		setorigin (body, self.origin + '0 0 24');
+		setmodel (body, "progs/player.mdl");
+		setsize (body, VEC_HULL_MIN, VEC_HULL_MAX);
+		
+		//Set the angles to the player's
+		body.angles = self.angles;
+	
+		//Change between two final death frames
+		if (random () * 4 >= 2)
+			body.frame = 69;
+		else
+			body.frame = 102;
+		
+		//Remove the body after 30 seconds
+		body.nextthink = time + 30;
+		body.think = SUB_Remove;
+	
+		//Play a death sound to futher the illusion
+		DeathSound ();
+	}
+	//End IEEE 01/03/2014
 };
 
 void ()
