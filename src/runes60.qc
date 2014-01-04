@@ -584,12 +584,25 @@ void (.float ammo_type)
 antipack_maybe_remove_ammo =
 {
 	local float n;
-
-	n = floor (random () * (other.ammo_type / 2));
-	if (n <= other.ammo_type)
-		other.ammo_type = other.ammo_type - n;
+	
+	//If the touching entity has vengeance reverse the ammo removal - IEEE 01/04/2014
+	if (other.runetype == RN_VENG)
+	{
+		n = floor (random () * (self.owner.ammo_type / 2));
+		if (n <= self.owner.ammo_type)
+			self.owner.ammo_type = self.owner.ammo_type - n;
+		else
+			self.owner.ammo_type = 0;
+	}
 	else
-		other.ammo_type = 0;
+	{
+		n = floor (random () * (other.ammo_type / 2));
+		if (n <= other.ammo_type)
+			other.ammo_type = other.ammo_type - n;
+		else
+			other.ammo_type = 0;
+	}
+	//END IEEE 01/04/2014
 };
 
 void ()
@@ -616,14 +629,29 @@ AntiPack_Touch =
 	maybe_update_trap_count (self.owner, RN_ANTIPACK);
 
 	centerprint (other, "You picked up an anti-pack!");
-	bprint (other.netname);
-	bprint (" picked up ");
-	bprint (self.owner.netname);
-	bprint ("'s anti-pack!\n");
+	
+	//If the touching entity has vengeance show this message - IEEE 01/04/2014
+	if (other.runetype == RN_VENG)
+	{
+		bprint (other.netname);
+		bprint (" enacted vengeance with ");
+		bprint (self.owner.netname);
+		bprint ("'s anti-pack!\n");
+		sound (self.owner, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
+		sound (self.owner, CHAN_BODY, "demon/ddeath.wav", 1, ATTN_NORM);
+	}
+	else
+	{
+		bprint (other.netname);
+		bprint (" picked up ");
+		bprint (self.owner.netname);
+		bprint ("'s anti-pack!\n");
+		sound (other, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
+		sound (other, CHAN_BODY, "demon/ddeath.wav", 1, ATTN_NORM);
 
-	sound (other, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
-	sound (other, CHAN_BODY, "demon/ddeath.wav", 1, ATTN_NORM);
-
+	}
+	//END IEEE 01/04/2014
+	
 	stuffcmd (other, "bf\n");
 
 	antipack_maybe_remove_ammo (ammo_shells);
