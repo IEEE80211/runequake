@@ -986,6 +986,12 @@ ShubHat_Think =
 		remove (self);
 		return;
 	}
+	
+	//Animate the shubhat - IEEE 01/08/2014
+	if (self.frame > 46)
+		self.frame = -1;
+	self.frame = self.frame + 1;
+	//END IEEE 01/08/2014
 
 	if (self.owner.runetype != RN_SHUB)
 	{
